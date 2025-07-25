@@ -7,12 +7,17 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://i.imghippo.com/files/rX5378Ok.png">
     <style>
+        /* Universal Box-Sizing for consistent layout */
+        * {
+            box-sizing: border-box;
+        }
+
         /* Basic Reset and Font */
         body {
             margin: 0;
             padding: 0;
             font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: #1a1a1a; /* Very Dark Grey fallback background */
+            background-color: #121212; /* Darkest Grey background as requested */
             background-image: url('https://i.imghippo.com/files/ZKX3827pMU.jpg'); /* Space background image */
             background-size: cover; /* Cover the entire viewport */
             background-attachment: fixed; /* Keep background fixed while scrolling */
@@ -23,7 +28,6 @@
             flex-direction: column;
             align-items: center;
             padding: 2rem 0; /* Vertical padding */
-            box-sizing: border-box; /* Include padding in element's total width and height */
         }
 
         /* Combined Home/About Section */
@@ -115,7 +119,7 @@
             max-width: 30rem;
             padding: 0.75rem 1rem;
             margin-bottom: 2rem;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem; /* Increased border-radius for softer look */
             border: 1px solid #ffffff; /* White border */
             background-color: #1f1f1f; /* Darker Grey background */
             color: #ffffff; /* White text */
@@ -210,23 +214,38 @@
         }
 
         /* Responsive width for item-card */
-        @media (min-width: 1025px) { /* Desktop: 3 columns */
-            .item-card {
-                width: calc(33.333% - 1rem); /* 1.5rem gap * 2 gaps / 3 items = 1rem */
+        @media (min-width: 1025px) { /* Desktop: 3 columns for main display */
+            #item-container .item-card {
+                flex-basis: calc(33.333% - 1rem); /* 1.5rem gap * 2 gaps / 3 items = 1rem */
+                width: auto; /* Ensure flex-basis takes precedence */
+            }
+            #calculator-item-container .item-card { /* Calculator browse: 4 columns */
+                flex-basis: calc(25% - 1.125rem); /* 1.5rem gap * 3 gaps / 4 items = 1.125rem */
+                width: auto; /* Remove explicit width */
             }
         }
-        @media (min-width: 769px) and (max-width: 1024px) { /* Tablet: 2 columns */
-            .item-card {
-                width: calc(50% - 0.75rem); /* 1.5rem gap * 1 gap / 2 items = 0.75rem */
+        @media (min-width: 769px) and (max-width: 1024px) { /* Tablet: 2 columns for main, 3 for calculator browse */
+            #item-container .item-card {
+                flex-basis: calc(50% - 0.75rem); /* 1.5rem gap * 1 gap / 2 items = 0.75rem */
+                width: auto; /* Remove explicit width */
+            }
+            #calculator-item-container .item-card { /* Calculator browse: 3 columns */
+                flex-basis: calc(33.333% - 1rem);
+                width: auto; /* Remove explicit width */
             }
         }
-        @media (max-width: 768px) { /* Mobile: 1 column */
+        @media (max-width: 768px) { /* Mobile: 1 column for both */
             .item-card {
-                width: 90%; /* Nearly full width on mobile */
+                flex-basis: 90%; /* Nearly full width on mobile */
+                width: auto; /* Remove explicit width */
                 max-width: 20rem; /* Prevent single card from getting too wide */
             }
+            #calculator-item-container .item-card {
+                flex-basis: 90%;
+                width: auto; /* Remove explicit width */
+                max-width: 18rem;
+            }
         }
-
 
         .item-card:hover {
             transform: translateY(-5px);
@@ -447,14 +466,14 @@
             flex-wrap: wrap;
             gap: 0.75rem;
             min-height: 5rem;
-            border: 1px dashed #303030; /* Lighter grey dashed border */
+            border: 1px dashed #2a2a2a; /* Lighter grey dashed border */
             border-radius: 0.5rem;
             padding: 0.75rem;
             align-content: flex-start;
         }
 
         .selected-item-pill {
-            background-color: #303030; /* Lighter Grey text background */
+            background-color: #2a2a2a; /* Lighter Grey text background */
             color: #ffffff;
             padding: 0.4rem 0.7rem;
             border-radius: 9999px;
@@ -525,192 +544,676 @@
 
         /* Responsive adjustments */
         @media (min-width: 1025px) { /* Desktop: 3 columns for main display */
-            #item-container {
-                max-width: 80rem; /* Keep existing max-width */
-            }
-            .item-card {
-                width: calc(33.333% - 1rem); /* 3 columns (1.5rem gap * 2 gaps / 3 items = 1rem) */
+            #item-container .item-card {
+                flex-basis: calc(33.333% - 1rem); /* 1.5rem gap * 2 gaps / 3 items = 1rem */
             }
             #calculator-item-container .item-card { /* Calculator browse: 4 columns */
-                width: calc(25% - 1.125rem); /* 1.5rem gap * 3 gaps / 4 items = 1.125rem */
+                flex-basis: calc(25% - 1.125rem); /* 1.5rem gap * 3 gaps / 4 items = 1.125rem */
             }
         }
         @media (min-width: 769px) and (max-width: 1024px) { /* Tablet: 2 columns for main, 3 for calculator browse */
-            .item-card {
-                width: calc(50% - 0.75rem); /* 2 columns (1.5rem gap * 1 gap / 2 items = 0.75rem) */
+            #item-container .item-card {
+                flex-basis: calc(50% - 0.75rem); /* 1.5rem gap * 1 gap / 2 items = 0.75rem */
             }
             #calculator-item-container .item-card { /* Calculator browse: 3 columns */
-                width: calc(33.333% - 1rem);
+                flex-basis: calc(33.333% - 1rem);
             }
         }
         @media (max-width: 768px) { /* Mobile: 1 column for both */
-            .category-heading, .calculator-header {
-                font-size: 2.25rem;
-                margin-bottom: 1.5rem;
-            }
-            .search-bar {
-                width: 90%;
-                margin-bottom: 1.5rem;
-            }
             .item-card {
-                width: 90%; /* Single column, nearly full width */
+                flex-basis: 90%; /* Nearly full width on mobile */
                 max-width: 20rem; /* Prevent single card from getting too wide */
             }
-            .value-block-amount {
-                font-size: 1.1rem;
-            }
-            .demand-level-pill {
-                font-size: 0.8rem;
-                padding: 0.25rem 0.6rem;
-            }
-            .details-section {
-                grid-template-columns: 1fr;
-                gap: 0.3rem;
-            }
-            #home-about-section h1 {
-                font-size: 2.5rem;
-            }
-            #home-about-section .welcome-text,
-            #home-about-section .about-text {
-                font-size: 0.95rem;
-            }
-            #category-buttons {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            #demand-explainer {
-                flex-direction: column;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .demand-explainer-item {
-                width: 100%;
-                justify-content: center;
-            }
-            #discord-button-top {
-                width: 3rem;
-                height: 3rem;
-                top: 1rem;
-                right: 1rem;
-            }
-            .trade-area-container {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            .trade-area {
-                max-width: 90%;
-            }
-            /* Calculator browse on mobile: force single column to avoid cramming */
             #calculator-item-container .item-card {
-                width: 90%;
+                flex-basis: 90%;
                 max-width: 18rem;
-            }
-            #value-difference-section {
-                max-width: 90%;
             }
         }
 
-        /* Custom Modal Styling */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .item-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Card Title (Item Name) */
+        .item-card h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #ffffff; /* White title */
+            margin-bottom: 0.5rem;
+            text-align: center;
+            font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Value Blocks (Current Value, Duped Value) */
+        .value-block {
+            background-color: #2a2a2a; /* Lighter Grey text background */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-block-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #cbd5e0;
+        }
+
+        .value-block-amount {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Demand Section */
+        .demand-block {
+            background-color: #2a2a2a; /* Lighter Grey text background */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demand-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #cbd5e0;
+        }
+
+        .demand-level-pill {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 0.3rem 0.7rem;
+            border-radius: 9999px;
+            color: #101010; /* Very dark grey text for demand pills */
+        }
+
+        /* Specific Demand Level Colors (kept as is) */
+        .demand-level-close-to-none { background-color: #6B7280; }
+        .demand-level-very-low { background-color: #EF4444; }
+        .demand-level-low { background-color: #F97316; }
+        .demand-level-medium { background-color: #F59E0B; }
+        .demand-level-decent { background-color: #22C55E; }
+        .demand-level-high { background-color: #3B82F6; }
+        .demand-level-very-high { background-color: #8B5CF6; }
+        .demand-level-extremely-high { background-color: #EC4899; }
+        .demand-level-unknown { background-color: #6B7280; }
+
+        /* Separator Line */
+        .separator {
+            border-top: 1px solid #303030; /* Lighter grey */
+            margin: 1rem 0;
+        }
+
+        /* Condensed Details Section */
+        .details-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.3rem 0.75rem;
+            font-size: 0.75rem;
+            color: #e2e8f0;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #cbd5e0;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            text-align: right;
+            word-break: break-word;
+            font-weight: normal;
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Avoided Indicator - Simplified Circle */
+        .avoided-indicator {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .avoided-indicator.avoided-true {
+            background-color: #ef4444; /* Red */
+        }
+        .avoided-indicator.avoided-slightly {
+            background-color: #f97316; /* Orange/Yellow */
+        }
+
+        /* Trading Content Section (initially hidden) */
+        .trading-content-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Discord Button (Top Right) */
+        #discord-button-top {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background-color: #5865F2; /* Discord Brand Color */
+            border: none;
+            border-radius: 50%;
+            width: 3.5rem;
+            height: 3.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1001;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            z-index: 1000;
         }
 
-        .modal-overlay.visible {
-            opacity: 1;
-            visibility: visible;
+        #discord-button-top:hover {
+            background-color: #4752C4;
+            transform: translateY(-3px);
         }
 
-        .modal-content {
-            background-color: #1f1f1f; /* Darker Grey background */
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 25rem;
-            width: 90%;
-            color: #ffffff;
-            border: 1px solid #ffffff; /* White border */
-            transform: translateY(-20px);
-            transition: transform 0.3s ease-in-out;
+        #discord-button-top img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
-        .modal-overlay.visible .modal-content {
-            transform: translateY(0);
+
+        /* Calculator Section Styling */
+        #calculator-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 80rem;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
         }
 
-        .modal-content h3 {
-            font-size: 1.5rem;
+        .calculator-header {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2.5rem;
             color: #ffffff; /* White title */
+            text-align: center;
+            text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.7); /* White glow */
+        }
+
+        .trade-area-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
             margin-bottom: 1rem;
         }
 
-        .modal-content p {
-            font-size: 1rem;
-            color: #e2e8f0;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-buttons {
+        .trade-area {
+            background-color: #1f1f1f; /* Darker Grey background */
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 35rem;
+            border: 1px solid #ffffff; /* White border */
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             gap: 1rem;
         }
 
-        .modal-button {
-            background-color: #f97316; /* Orange button */
-            color: #101010; /* Dark text */
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            border: none;
+        .trade-area-title {
+            font-size: 1.5rem;
             font-weight: bold;
+            color: #e2e8f0;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .selected-items-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            min-height: 5rem;
+            border: 1px dashed #2a2a2a; /* Lighter grey dashed border */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            align-content: flex-start;
+        }
+
+        .selected-item-pill {
+            background-color: #2a2a2a; /* Lighter Grey text background */
+            color: #ffffff;
+            padding: 0.4rem 0.7rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .selected-item-pill .remove-item-btn {
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            padding: 0;
+            margin-left: 0.3rem;
+            line-height: 1;
         }
 
-        .modal-button:hover {
-            background-color: #ea580c; /* Darker orange on hover */
-            transform: translateY(-2px);
+        .trade-total {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #ffffff; /* White total text */
+            text-align: right;
+            margin-top: 1rem;
         }
 
-        .modal-button.cancel {
-            background-color: #2a2a2a; /* Lighter grey for cancel button */
-            color: #e2e8f0; /* Light text */
+        /* Value Difference Section */
+        #value-difference-section {
+            background-color: #1f1f1f; /* Darker Grey background */
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1rem 1.5rem;
+            width: 100%;
+            max-width: 72rem;
+            margin-bottom: 2rem;
+            border: 1px solid #ffffff; /* White border */
+            text-align: center;
         }
 
-        .modal-button.cancel:hover {
-            background-color: #6b7280; /* Darker grey on hover */
+        #value-difference-section .difference-label {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
         }
 
-        /* Custom Message Box (for non-confirm alerts) */
-        #custom-message-box {
+        #value-difference-section .difference-amount {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #ffffff; /* White default color */
+        }
+
+        /* Calculator actions buttons (remains orange) */
+        .calculator-actions button {
+            background-color: #f97316;
+            color: #101010; /* Darker text for orange button */
+            /* ... other styles remain ... */
+        }
+
+        /* Calculator browse section buttons (remains light blue) */
+        .calculator-item-actions button {
+            background-color: #63b3ed;
+            color: #101010; /* Darker text for blue button */
+            /* ... other styles remain ... */
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 1025px) { /* Desktop: 3 columns for main display */
+            #item-container .item-card {
+                flex-basis: calc(33.333% - 1rem); /* 1.5rem gap * 2 gaps / 3 items = 1rem */
+            }
+            #calculator-item-container .item-card { /* Calculator browse: 4 columns */
+                flex-basis: calc(25% - 1.125rem); /* 1.5rem gap * 3 gaps / 4 items = 1.125rem */
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) { /* Tablet: 2 columns for main, 3 for calculator browse */
+            #item-container .item-card {
+                flex-basis: calc(50% - 0.75rem); /* 1.5rem gap * 1 gap / 2 items = 0.75rem */
+            }
+            #calculator-item-container .item-card { /* Calculator browse: 3 columns */
+                flex-basis: calc(33.333% - 1rem);
+            }
+        }
+        @media (max-width: 768px) { /* Mobile: 1 column for both */
+            .item-card {
+                flex-basis: 90%; /* Nearly full width on mobile */
+                max-width: 20rem; /* Prevent single card from getting too wide */
+            }
+            #calculator-item-container .item-card {
+                flex-basis: 90%;
+                max-width: 18rem;
+            }
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Card Title (Item Name) */
+        .item-card h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #ffffff; /* White title */
+            margin-bottom: 0.5rem;
+            text-align: center;
+            font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Value Blocks (Current Value, Duped Value) */
+        .value-block {
+            background-color: #2a2a2a; /* Lighter Grey text background */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-block-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #cbd5e0;
+        }
+
+        .value-block-amount {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #ffffff;
+            font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Demand Section */
+        .demand-block {
+            background-color: #2a2a2a; /* Lighter Grey text background */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .demand-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #cbd5e0;
+        }
+
+        .demand-level-pill {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 0.3rem 0.7rem;
+            border-radius: 9999px;
+            color: #101010; /* Very dark grey text for demand pills */
+        }
+
+        /* Specific Demand Level Colors (kept as is) */
+        .demand-level-close-to-none { background-color: #6B7280; }
+        .demand-level-very-low { background-color: #EF4444; }
+        .demand-level-low { background-color: #F97316; }
+        .demand-level-medium { background-color: #F59E0B; }
+        .demand-level-decent { background-color: #22C55E; }
+        .demand-level-high { background-color: #3B82F6; }
+        .demand-level-very-high { background-color: #8B5CF6; }
+        .demand-level-extremely-high { background-color: #EC4899; }
+        .demand-level-unknown { background-color: #6B7280; }
+
+        /* Separator Line */
+        .separator {
+            border-top: 1px solid #303030; /* Lighter grey */
+            margin: 1rem 0;
+        }
+
+        /* Condensed Details Section */
+        .details-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.3rem 0.75rem;
+            font-size: 0.75rem;
+            color: #e2e8f0;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #cbd5e0;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            text-align: right;
+            word-break: break-word;
+            font-weight: normal;
+            font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        /* Avoided Indicator - Simplified Circle */
+        .avoided-indicator {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .avoided-indicator.avoided-true {
+            background-color: #ef4444; /* Red */
+        }
+        .avoided-indicator.avoided-slightly {
+            background-color: #f97316; /* Orange/Yellow */
+        }
+
+        /* Trading Content Section (initially hidden) */
+        .trading-content-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Discord Button (Top Right) */
+        #discord-button-top {
             position: fixed;
             top: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            z-index: 9999;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            right: 1.5rem;
+            background-color: #5865F2; /* Discord Brand Color */
+            border: none;
+            border-radius: 50%;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            z-index: 1000;
+        }
+
+        #discord-button-top:hover {
+            background-color: #4752C4;
+            transform: translateY(-3px);
+        }
+
+        #discord-button-top img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+
+        /* Calculator Section Styling */
+        #calculator-section {
             display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            font-size: 1rem;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 80rem;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
+        }
+
+        .calculator-header {
+            font-size: 3rem;
             font-weight: bold;
+            margin-bottom: 2.5rem;
+            color: #ffffff; /* White title */
             text-align: center;
+            text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.7); /* White glow */
+        }
+
+        .trade-area-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .trade-area {
+            background-color: #1f1f1f; /* Darker Grey background */
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 35rem;
+            border: 1px solid #ffffff; /* White border */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .trade-area-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e2e8f0;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .selected-items-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            min-height: 5rem;
+            border: 1px dashed #2a2a2a; /* Lighter grey dashed border */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            align-content: flex-start;
+        }
+
+        .selected-item-pill {
+            background-color: #2a2a2a; /* Lighter Grey text background */
+            color: #ffffff;
+            padding: 0.4rem 0.7rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .selected-item-pill .remove-item-btn {
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 0.3rem;
+            line-height: 1;
+        }
+
+        .trade-total {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #ffffff; /* White total text */
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+        /* Value Difference Section */
+        #value-difference-section {
+            background-color: #1f1f1f; /* Darker Grey background */
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1rem 1.5rem;
+            width: 100%;
+            max-width: 72rem;
+            margin-bottom: 2rem;
+            border: 1px solid #ffffff; /* White border */
+            text-align: center;
+        }
+
+        #value-difference-section .difference-label {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        #value-difference-section .difference-amount {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #ffffff; /* White default color */
+        }
+
+        /* Calculator actions buttons (remains orange) */
+        .calculator-actions button {
+            background-color: #f97316;
+            color: #101010; /* Darker text for orange button */
+            /* ... other styles remain ... */
+        }
+
+        /* Calculator browse section buttons (remains light blue) */
+        .calculator-item-actions button {
+            background-color: #63b3ed;
+            color: #101010; /* Darker text for blue button */
+            /* ... other styles remain ... */
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 1025px) { /* Desktop: 3 columns for main display */
+            #item-container .item-card {
+                flex-basis: calc(33.333% - 1rem); /* 1.5rem gap * 2 gaps / 3 items = 1rem */
+            }
+            #calculator-item-container .item-card { /* Calculator browse: 4 columns */
+                flex-basis: calc(25% - 1.125rem); /* 1.5rem gap * 3 gaps / 4 items = 1.125rem */
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) { /* Tablet: 2 columns for main, 3 for calculator browse */
+            #item-container .item-card {
+                flex-basis: calc(50% - 0.75rem); /* 1.5rem gap * 1 gap / 2 items = 0.75rem */
+            }
+            #calculator-item-container .item-card { /* Calculator browse: 3 columns */
+                flex-basis: calc(33.333% - 1rem);
+            }
+        }
+        @media (max-width: 768px) { /* Mobile: 1 column for both */
+            .item-card {
+                flex-basis: 90%; /* Nearly full width on mobile */
+                max-width: 20rem; /* Prevent single card from getting too wide */
+            }
+            #calculator-item-container .item-card {
+                flex-basis: 90%;
+                max-width: 18rem;
+            }
         }
     </style>
 </head>
@@ -725,7 +1228,7 @@
         <button id="rims-button" class="category-button">Rims</button>
         <button id="spoilers-button" class="category-button">Spoilers</button>
         <button id="hyperchromes-button" class="category-button">Hyperchromes</button>
-        <button id="calculator-button" class="category-button">Calculator</button> <!-- New Calculator Button -->
+        <button id="calculator-button" class="category-button">Calculator</button>
     </div>
 
     <!-- Combined Home and About Section -->
@@ -888,7 +1391,7 @@
         // Get DOM elements
         const homeAboutSection = document.getElementById('home-about-section');
         const tradingContentSection = document.getElementById('trading-content-section');
-        const calculatorSection = document.getElementById('calculator-section'); // New calculator section
+        const calculatorSection = document.getElementById('calculator-section');
 
         const itemContainer = document.getElementById('item-container');
         const searchBar = document.getElementById('search-bar');
@@ -901,7 +1404,7 @@
         const rimsButton = document.getElementById('rims-button');
         const spoilersButton = document.getElementById('spoilers-button');
         const hyperchromesButton = document.getElementById('hyperchromes-button');
-        const calculatorButton = document.getElementById('calculator-button'); // New Calculator button
+        const calculatorButton = document.getElementById('calculator-button');
 
         const discordButtonTop = document.getElementById('discord-button-top');
 
@@ -912,7 +1415,7 @@
         const requestingTotalSpan = document.getElementById('requesting-total');
         const offeringCountSpan = document.getElementById('offering-count');
         const requestingCountSpan = document.getElementById('requesting-count');
-        const valueDifferenceSpan = document.getElementById('value-difference'); // New value difference span
+        const valueDifferenceSpan = document.getElementById('value-difference');
         const swapSidesButton = document.getElementById('swap-sides-button');
         const clearAllButton = document.getElementById('clear-all-button');
         const calculatorSearchBar = document.getElementById('calculator-search-bar');
@@ -920,8 +1423,7 @@
 
         // Custom Modal elements
         const valueSelectionModal = document.getElementById('value-selection-modal');
-        // Corrected target for modal item name
-        const modalItemNameContainer = valueSelectionModal.querySelector('p#modal-item-name'); // Select the p tag directly
+        const modalItemName = document.getElementById('modal-item-name');
         const modalCleanButton = document.getElementById('modal-clean-button');
         const modalDupedButton = document.getElementById('modal-duped-button');
         const customMessageBox = document.getElementById('custom-message-box');
@@ -930,7 +1432,7 @@
         // Calculator state
         let offeringItems = [];
         let requestingItems = [];
-        const MAX_ITEMS_PER_SIDE = 8; // As per the image
+        const MAX_ITEMS_PER_SIDE = 8;
 
         let currentActiveData = vehiclesData; // Default to vehicles
         let currentCategoryName = "Vehicle"; // Default category title
@@ -939,7 +1441,7 @@
         function showSection(sectionId) {
             homeAboutSection.style.display = 'none';
             tradingContentSection.style.display = 'none';
-            calculatorSection.style.display = 'none'; // Hide calculator section by default
+            calculatorSection.style.display = 'none';
 
             if (sectionId === 'home-about-section') {
                 homeAboutSection.style.display = 'flex';
@@ -947,8 +1449,8 @@
                 tradingContentSection.style.display = 'flex';
             } else if (sectionId === 'calculator-section') {
                 calculatorSection.style.display = 'flex';
-                renderCalculatorBrowseItems(allData); // Render all items for calculator browse
-                updateCalculatorTotals(); // Update totals when showing calculator
+                renderCalculatorBrowseItems(allData);
+                updateCalculatorTotals();
             }
         }
 
@@ -1207,7 +1709,7 @@
 
         function addItemToSide(item, side, selectedValue, isDuped) {
             let targetArray = side === 'offering' ? offeringItems : requestingItems;
-            
+
             if (targetArray.length < MAX_ITEMS_PER_SIDE) {
                 // Create a copy of the item and add selectedPrice and isDuped
                 const itemToAdd = { ...item, selectedValue: selectedValue, isDuped: isDuped };
@@ -1221,7 +1723,7 @@
 
         function removeItemFromSide(itemName, side) {
             let targetArray = side === 'offering' ? offeringItems : requestingItems;
-            
+
             // Filter out the item to remove
             targetArray = targetArray.filter(item => item.name !== itemName);
 
