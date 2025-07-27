@@ -118,7 +118,7 @@
             width: 90%;
             max-width: 30rem;
             padding: 0.75rem 1rem;
-            margin-bottom: 2rem;
+            margin: 0 auto 2rem auto; /* Centered with auto margins */
             border-radius: 0.75rem; /* Increased border-radius for softer look */
             border: 1px solid #ffffff; /* White border */
             background-color: #1f1f1f; /* Darker Grey background */
@@ -949,7 +949,7 @@
             const currentValueBlock = document.createElement('div');
             currentValueBlock.classList.add('value-block');
             currentValueBlock.innerHTML = `
-                <span class="value-block-label">${mode === 'calculator-add' ? 'Current<br>Value' : currentValueLabel}</span>
+                <span class="value-block-label">${mode === 'calculator-add' ? 'Current<br>Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : currentValueLabel}</span>
                 <span class="value-block-amount current-value-display">${item.currentValue}</span>
             `;
             card.appendChild(currentValueBlock);
@@ -958,7 +958,7 @@
             const dupedValueBlock = document.createElement('div');
             dupedValueBlock.classList.add('value-block');
             dupedValueBlock.innerHTML = `
-                <span class="value-block-label">${mode === 'calculator-add' ? 'Duped<br>Value' : 'Duped Value'}</span>
+                <span class="value-block-label">${mode === 'calculator-add' ? 'Duped<br>Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : 'Duped Value'}</span>
                 <span class="value-block-amount duped-value-display">${item.dupedValue}</span>
             `;
             card.appendChild(dupedValueBlock);
