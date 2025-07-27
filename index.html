@@ -949,7 +949,7 @@
             const currentValueBlock = document.createElement('div');
             currentValueBlock.classList.add('value-block');
             currentValueBlock.innerHTML = `
-                <span class="value-block-label">${currentValueLabel}</span>
+                <span class="value-block-label">${mode === 'calculator-add' ? 'Current<br>Value' : currentValueLabel}</span>
                 <span class="value-block-amount current-value-display">${item.currentValue}</span>
             `;
             card.appendChild(currentValueBlock);
@@ -958,7 +958,7 @@
             const dupedValueBlock = document.createElement('div');
             dupedValueBlock.classList.add('value-block');
             dupedValueBlock.innerHTML = `
-                <span class="value-block-label">Duped Value</span>
+                <span class="value-block-label">${mode === 'calculator-add' ? 'Duped<br>Value' : 'Duped Value'}</span>
                 <span class="value-block-amount duped-value-display">${item.dupedValue}</span>
             `;
             card.appendChild(dupedValueBlock);
